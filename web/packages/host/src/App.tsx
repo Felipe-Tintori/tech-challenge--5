@@ -5,7 +5,7 @@ import { AccessibilityProvider } from './contexts/AccessibilityContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
-function App() {
+export function App() {
   return (
     <ErrorBoundary>
       <BrowserRouter>
