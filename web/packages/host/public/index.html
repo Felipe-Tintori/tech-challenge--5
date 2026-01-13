@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MindEase - Plataforma de Acessibilidade Cognitiva para pessoas neurodivergentes">
+    <meta name="theme-color" content="#6366f1">
+    <title>MindEase - Acessibilidade Cognitiva</title>
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Open Sans - Fonte acessível e legível -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        
+        #root {
+            min-height: 100vh;
+        }
+        
+        /* Loading Screen */
+        .loading-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .loading-logo {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            animation: fadeIn 0.6s ease-in;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .loading-text {
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Skip to main content link for accessibility */
+        .skip-to-main {
+            position: absolute;
+            left: -9999px;
+            z-index: 999;
+            padding: 1rem;
+            background-color: #6366f1;
+            color: white;
+            text-decoration: none;
+            border-radius: 0.25rem;
+        }
+        
+        .skip-to-main:focus {
+            left: 1rem;
+            top: 1rem;
+        }
+        
+        /* Focus visible for better keyboard navigation */
+        *:focus-visible {
+            outline: 3px solid #6366f1;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-to-main">Pular para o conteúdo principal</a>
+    
+    <div id="root">
+        <div class="loading-screen">
+            <div class="loading-logo">🧠 MindEase</div>
+            <div class="loading-spinner" role="status" aria-label="Carregando aplicação"></div>
+            <p class="loading-text">Preparando sua experiência acessível...</p>
+        </div>
+    </div>
+    
+    <noscript>
+        <div style="padding: 2rem; text-align: center; background-color: #fee; color: #c00;">
+            <h1>JavaScript Necessário</h1>
+            <p>Esta aplicação requer JavaScript para funcionar. Por favor, habilite JavaScript no seu navegador.</p>
+        </div>
+    </noscript>
+</body>
+</html>

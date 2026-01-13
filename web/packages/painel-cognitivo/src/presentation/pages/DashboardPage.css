@@ -1,0 +1,115 @@
+.dashboard-page {
+  width: 100%;
+}
+
+.dashboard-page__header {
+  margin-bottom: var(--spacing-8);
+}
+
+.dashboard-page__title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-2);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.dashboard-page__subtitle {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+}
+
+.dashboard-page__tabs {
+  display: flex;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-6);
+  border-bottom: 2px solid var(--color-border);
+  overflow-x: auto;
+}
+
+.dashboard-page__tab {
+  padding: var(--spacing-3) var(--spacing-5);
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.dashboard-page__tab:hover {
+  color: var(--color-primary-600);
+  background-color: var(--color-primary-50);
+}
+
+.dashboard-page__tab--active {
+  color: var(--color-primary-700);
+  border-bottom-color: var(--color-primary-600);
+}
+
+.dashboard-page__content {
+  animation: fadeIn 0.3s ease;
+}
+
+.dashboard-page__section {
+  margin-bottom: var(--spacing-8);
+}
+
+.dashboard-page__section-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-6);
+}
+
+.dashboard-page__controls-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-6);
+  margin-bottom: var(--spacing-6);
+}
+
+.dashboard-page__info-card {
+  padding: var(--spacing-6);
+  background-color: var(--color-info-50);
+  border: 1px solid var(--color-info-200);
+  border-radius: var(--radius-lg);
+  margin-top: var(--spacing-6);
+}
+
+.dashboard-page__info-card h3 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-info-700);
+  margin-bottom: var(--spacing-3);
+}
+
+.dashboard-page__info-card p {
+  font-size: var(--font-size-base);
+  color: var(--color-info-700);
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-page__controls-grid {
+    grid-template-columns: 1fr;
+  }
+}

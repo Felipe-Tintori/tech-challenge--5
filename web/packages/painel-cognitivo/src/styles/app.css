@@ -1,0 +1,55 @@
+.painel-cognitivo {
+  width: 100%;
+  min-height: 100%;
+}
+
+.painel-cognitivo__header {
+  margin-bottom: var(--spacing-8);
+}
+
+.painel-cognitivo__title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-2);
+}
+
+.painel-cognitivo__subtitle {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+}
+
+.painel-cognitivo__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--spacing-6);
+  margin-bottom: var(--spacing-8);
+}
+
+.painel-cognitivo__card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-6);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-base);
+}
+
+.painel-cognitivo__card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.painel-cognitivo__card-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-4);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.painel-cognitivo__card-icon {
+  font-size: 1.5rem;
+}

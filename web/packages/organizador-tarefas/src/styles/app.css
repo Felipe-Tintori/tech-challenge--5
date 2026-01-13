@@ -1,0 +1,33 @@
+.organizador-tarefas {
+  min-height: 100vh;
+  background: var(--background-color, #f8f9fa);
+}
+
+.organizador-tarefas__header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0;
+}
+
+.organizador-tarefas__header h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+}
+
+.organizador-tarefas__header p {
+  margin: 0;
+  font-size: 1.125rem;
+  opacity: 0.95;
+  color: white;
+}
+
+.organizador-tarefas__content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}

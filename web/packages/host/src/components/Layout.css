@@ -1,0 +1,35 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.layout__container {
+  display: flex;
+  flex: 1;
+  position: relative;
+}
+
+.layout__main {
+  flex: 1;
+  padding: var(--spacing-6);
+  background-color: var(--color-background);
+  overflow-y: auto;
+  outline: none;
+}
+
+.layout--focus-mode .layout__main {
+  padding: var(--spacing-8) var(--spacing-12);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .layout__main {
+    padding: var(--spacing-4);
+  }
+  
+  .layout--focus-mode .layout__main {
+    padding: var(--spacing-6);
+  }
+}

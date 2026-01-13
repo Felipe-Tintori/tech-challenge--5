@@ -1,0 +1,20 @@
+.perfil-usuario {
+  width: 100%;
+  min-height: 100%;
+}
+
+.perfil-usuario__header {
+  margin-bottom: var(--spacing-8);
+}
+
+.perfil-usuario__header h1 {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-2);
+}
+
+.perfil-usuario__header p {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+}
