@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { getFirebaseAuth, getFirestoreDb } from '../config/firebase';
 
 interface ThemeContextType {
   theme: 'light' | 'dark' | 'high-contrast';
@@ -14,46 +16,94 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<'light' | 'dark' | 'high-contrast'>('light');
-  const [fontSize, setFontSize] = useState<'medium' | 'large' | 'extra-large'>('medium');
-  const [spacing, setSpacing] = useState<'normal' | 'comfortable' | 'spacious'>('normal');
-  const [animationsEnabled, setAnimationsEnabled] = useState(true);
+  const [theme, setThemeState] = useState<'light' | 'dark' | 'high-contrast'>('light');
+  const [fontSize, setFontSizeState] = useState<'medium' | 'large' | 'extra-large'>('medium');
+  const [spacing, setSpacingState] = useState<'normal' | 'comfortable' | 'spacious'>('normal');
+  const [animationsEnabled, setAnimationsEnabledState] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const auth = getFirebaseAuth();
+  const db = getFirestoreDb();
+
+  // Load preferences from Firestore
+  useEffect(() => {
+    const loadPreferences = async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        setIsLoaded(true);
+        return;
+      }
+
+      try {
+        const docRef = doc(db, 'theme_preferences', user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setThemeState(data.theme || 'light');
+          setFontSizeState(data.fontSize || 'medium');
+          setSpacingState(data.spacing || 'normal');
+          setAnimationsEnabledState(data.animationsEnabled !== false);
+        }
+      } catch (error) {
+        console.error('Error loading theme preferences:', error);
+      }
+
+      setIsLoaded(true);
+    };
+
+    // Listen for auth state changes
+    const unsubscribe = auth.onAuthStateChanged(() => {
+      loadPreferences();
+    });
+
+    return () => unsubscribe();
+  }, [auth, db]);
+
+  // Save preferences to Firestore
+  const savePreferences = async (data: any) => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    try {
+      const docRef = doc(db, 'theme_preferences', user.uid);
+      await setDoc(docRef, {
+        ...data,
+        updatedAt: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error('Error saving theme preferences:', error);
+    }
+  };
 
   useEffect(() => {
-    // Load preferences from localStorage
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'high-contrast' | null;
-    const savedFontSize = localStorage.getItem('fontSize') as 'medium' | 'large' | 'extra-large' | null;
-    const savedSpacing = localStorage.getItem('spacing') as 'normal' | 'comfortable' | 'spacious' | null;
-    const savedAnimations = localStorage.getItem('animationsEnabled');
+    if (!isLoaded) return;
 
-    if (savedTheme) setTheme(savedTheme);
-    if (savedFontSize) setFontSize(savedFontSize);
-    if (savedSpacing) setSpacing(savedSpacing);
-    if (savedAnimations !== null) setAnimationsEnabled(savedAnimations === 'true');
-
-    // Check for system preference
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    
-    if (!savedTheme && prefersDark) setTheme('dark');
-    if (prefersReducedMotion) setAnimationsEnabled(false);
-  }, []);
-
-  useEffect(() => {
     // Apply theme to document
     document.documentElement.setAttribute('data-theme', theme);
     document.documentElement.setAttribute('data-font-size', fontSize);
     document.documentElement.setAttribute('data-spacing', spacing);
     document.documentElement.setAttribute('data-reduced-motion', (!animationsEnabled).toString());
 
-    // Save to localStorage
-    localStorage.setItem('theme', theme);
-    localStorage.setItem('fontSize', fontSize);
-    localStorage.setItem('spacing', spacing);
-    localStorage.setItem('animationsEnabled', animationsEnabled.toString());
-  }, [theme, fontSize, spacing, animationsEnabled]);
+    // Save to Firestore
+    savePreferences({ theme, fontSize, spacing, animationsEnabled });
+  }, [theme, fontSize, spacing, animationsEnabled, isLoaded]);
 
-  const toggleAnimations = () => setAnimationsEnabled(!animationsEnabled);
+  const setTheme = (newTheme: 'light' | 'dark' | 'high-contrast') => {
+    setThemeState(newTheme);
+  };
+
+  const setFontSize = (size: 'medium' | 'large' | 'extra-large') => {
+    setFontSizeState(size);
+  };
+
+  const setSpacing = (newSpacing: 'normal' | 'comfortable' | 'spacious') => {
+    setSpacingState(newSpacing);
+  };
+
+  const toggleAnimations = () => {
+    setAnimationsEnabledState(!animationsEnabled);
+  };
 
   return (
     <ThemeContext.Provider

@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { getFirebaseAuth, getFirestoreDb } from '../config/firebase';
 
 interface AccessibilityContextType {
   focusMode: boolean;
@@ -18,26 +20,49 @@ interface AccessibilityContextType {
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
 
 export function AccessibilityProvider({ children }: { children: ReactNode }) {
-  const [focusMode, setFocusMode] = useState(false);
-  const [complexityLevel, setComplexityLevel] = useState<'minimal' | 'simple' | 'standard' | 'detailed'>('standard');
-  const [displayMode, setDisplayMode] = useState<'resume' | 'detailed'>('detailed');
-  const [cognitiveAlerts, setCognitiveAlerts] = useState(true);
-  const [focusIndicators, setFocusIndicators] = useState<'standard' | 'enhanced'>('standard');
+  const [focusMode, setFocusModeState] = useState(false);
+  const [complexityLevel, setComplexityLevelState] = useState<'minimal' | 'simple' | 'standard' | 'detailed'>('standard');
+  const [displayMode, setDisplayModeState] = useState<'resume' | 'detailed'>('detailed');
+  const [cognitiveAlerts, setCognitiveAlertsState] = useState(true);
+  const [focusIndicators, setFocusIndicatorsState] = useState<'standard' | 'enhanced'>('standard');
   const [screenReader, setScreenReader] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
+  const auth = getFirebaseAuth();
+  const db = getFirestoreDb();
+
+  // Load preferences from Firestore
   useEffect(() => {
-    // Load preferences from localStorage
-    const savedFocusMode = localStorage.getItem('focusMode');
-    const savedComplexity = localStorage.getItem('complexityLevel') as 'minimal' | 'simple' | 'standard' | 'detailed' | null;
-    const savedDisplayMode = localStorage.getItem('displayMode') as 'resume' | 'detailed' | null;
-    const savedCognitiveAlerts = localStorage.getItem('cognitiveAlerts');
-    const savedFocusIndicators = localStorage.getItem('focusIndicators') as 'standard' | 'enhanced' | null;
+    const loadPreferences = async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        setIsLoaded(true);
+        return;
+      }
 
-    if (savedFocusMode !== null) setFocusMode(savedFocusMode === 'true');
-    if (savedComplexity) setComplexityLevel(savedComplexity);
-    if (savedDisplayMode) setDisplayMode(savedDisplayMode);
-    if (savedCognitiveAlerts !== null) setCognitiveAlerts(savedCognitiveAlerts === 'true');
-    if (savedFocusIndicators) setFocusIndicators(savedFocusIndicators);
+      try {
+        const docRef = doc(db, 'accessibility_preferences', user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setFocusModeState(data.focusMode || false);
+          setComplexityLevelState(data.complexityLevel || 'standard');
+          setDisplayModeState(data.displayMode || 'detailed');
+          setCognitiveAlertsState(data.cognitiveAlerts !== false);
+          setFocusIndicatorsState(data.focusIndicators || 'standard');
+        }
+      } catch (error) {
+        console.error('Error loading accessibility preferences:', error);
+      }
+
+      setIsLoaded(true);
+    };
+
+    // Listen for auth state changes
+    const unsubscribe = auth.onAuthStateChanged(() => {
+      loadPreferences();
+    });
 
     // Detect screen reader
     const detectScreenReader = () => {
@@ -45,22 +70,58 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
       setScreenReader(isScreenReaderActive);
     };
     detectScreenReader();
-  }, []);
+
+    return () => unsubscribe();
+  }, [auth, db]);
+
+  // Save preferences to Firestore
+  const savePreferences = async (data: any) => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    try {
+      const docRef = doc(db, 'accessibility_preferences', user.uid);
+      await setDoc(docRef, {
+        ...data,
+        updatedAt: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error('Error saving accessibility preferences:', error);
+    }
+  };
 
   useEffect(() => {
+    if (!isLoaded) return;
+
     // Apply accessibility settings to document
     document.documentElement.setAttribute('data-focus-mode', focusMode.toString());
     document.documentElement.setAttribute('data-complexity', complexityLevel);
     document.documentElement.setAttribute('data-display-mode', displayMode);
     document.documentElement.setAttribute('data-focus-indicators', focusIndicators);
 
-    // Save to localStorage
-    localStorage.setItem('focusMode', focusMode.toString());
-    localStorage.setItem('complexityLevel', complexityLevel);
-    localStorage.setItem('displayMode', displayMode);
-    localStorage.setItem('cognitiveAlerts', cognitiveAlerts.toString());
-    localStorage.setItem('focusIndicators', focusIndicators);
-  }, [focusMode, complexityLevel, displayMode, cognitiveAlerts, focusIndicators]);
+    // Save to Firestore
+    savePreferences({ focusMode, complexityLevel, displayMode, cognitiveAlerts, focusIndicators });
+  }, [focusMode, complexityLevel, displayMode, cognitiveAlerts, focusIndicators, isLoaded]);
+
+  const setFocusMode = (enabled: boolean) => {
+    setFocusModeState(enabled);
+  };
+
+  const setComplexityLevel = (level: 'minimal' | 'simple' | 'standard' | 'detailed') => {
+    setComplexityLevelState(level);
+  };
+
+  const setDisplayMode = (mode: 'resume' | 'detailed') => {
+    setDisplayModeState(mode);
+  };
+
+  const setCognitiveAlerts = (enabled: boolean) => {
+    setCognitiveAlertsState(enabled);
+  };
+
+  const setFocusIndicators = (type: 'standard' | 'enhanced') => {
+    setFocusIndicatorsState(type);
+  };
 
   const announceToScreenReader = (message: string) => {
     const announcement = document.createElement('div');

@@ -1,7 +1,7 @@
 .profile-form {
   max-width: 800px;
   margin: 0 auto;
-  background: white;
+  background: var(--card-bg, white);
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -63,6 +63,22 @@
   cursor: pointer;
   font-size: 0.875rem;
   color: var(--text-primary, #212529);
+}
+
+/* Dark theme support */
+[data-theme="dark"] .profile-form,
+[data-theme="high-contrast"] .profile-form {
+  background: var(--card-bg, #1a1a1a);
+}
+
+[data-theme="dark"] .profile-form__section-title,
+[data-theme="high-contrast"] .profile-form__section-title {
+  color: var(--text-primary, #ffffff);
+}
+
+[data-theme="dark"] .checkbox-item label,
+[data-theme="high-contrast"] .checkbox-item label {
+  color: var(--text-primary, #e0e0e0);
 }
 
 .needs-list {

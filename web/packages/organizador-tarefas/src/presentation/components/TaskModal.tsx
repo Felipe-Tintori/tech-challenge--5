@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Task, TaskPriority, TaskStatus, CreateTaskDTO } from '../../domain/entities/Task';
-import { LocalStorageTaskRepository } from '../../infrastructure/repositories/LocalStorageTaskRepository';
+import { FirestoreTaskRepository } from '../../infrastructure/repositories/FirestoreTaskRepository';
 import { CreateTaskUseCase } from '../../application/useCases/CreateTaskUseCase';
 import { UpdateTaskUseCase } from '../../application/useCases/UpdateTaskUseCase';
 import './TaskModal.css';
 
-const repository = new LocalStorageTaskRepository();
+const repository = new FirestoreTaskRepository();
 const createTaskUseCase = new CreateTaskUseCase(repository);
 const updateTaskUseCase = new UpdateTaskUseCase(repository);
 

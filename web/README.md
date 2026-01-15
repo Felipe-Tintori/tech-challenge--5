@@ -58,6 +58,16 @@ npm install
 npm run install:all
 ```
 
+### Configuração do Firebase
+
+A aplicação utiliza Firebase Firestore para persistência de dados. Siga estas etapas:
+
+1. Crie um projeto no [Firebase Console](https://console.firebase.google.com/)
+2. Copie o arquivo `.env.example` para `.env`
+3. Configure suas credenciais do Firebase no arquivo `.env`
+
+Para instruções detalhadas, consulte [FIREBASE_SETUP.md](./FIREBASE_SETUP.md)
+
 ### Desenvolvimento
 
 ```bash

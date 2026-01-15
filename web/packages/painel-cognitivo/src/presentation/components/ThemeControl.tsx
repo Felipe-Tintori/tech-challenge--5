@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { ThemeMode } from '../../domain/entities/Preferences';
-import { LocalStoragePreferencesRepository } from '../../infrastructure/repositories/LocalStoragePreferencesRepository';
+import { FirestorePreferencesRepository } from '../../infrastructure/repositories/FirestorePreferencesRepository';
 import { UpdateUserPreferencesUseCase } from '../../application/useCases/UpdateUserPreferencesUseCase';
 import './ControlCard.css';
 
-const repository = new LocalStoragePreferencesRepository();
+const repository = new FirestorePreferencesRepository();
 const updatePreferencesUseCase = new UpdateUserPreferencesUseCase(repository);
 
 export function ThemeControl() {

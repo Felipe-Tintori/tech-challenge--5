@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './LoginPage.css';
@@ -13,6 +13,11 @@ export function LoginPage() {
   
   const { login, register } = useAuth();
   const navigate = useNavigate();
+
+  // Clear old localStorage data on mount
+  useEffect(() => {
+    localStorage.removeItem('user');
+  }, []);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -31,8 +36,26 @@ export function LoginPage() {
         await register(name, email, password);
       }
       navigate('/');
-    } catch (err) {
-      setError('Erro ao processar sua solicitação. Tente novamente.');
+    } catch (err: any) {
+      // Firebase error handling
+      const errorCode = err.code;
+      let errorMessage = 'Erro ao processar sua solicitação. Tente novamente.';
+      
+      if (errorCode === 'auth/email-already-in-use') {
+        errorMessage = 'Este e-mail já está em uso.';
+      } else if (errorCode === 'auth/invalid-email') {
+        errorMessage = 'E-mail inválido.';
+      } else if (errorCode === 'auth/weak-password') {
+        errorMessage = 'A senha deve ter pelo menos 6 caracteres.';
+      } else if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password') {
+        errorMessage = 'E-mail ou senha incorretos.';
+      } else if (errorCode === 'auth/invalid-credential') {
+        errorMessage = 'Credenciais inválidas. Verifique seu e-mail e senha.';
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -143,7 +166,7 @@ export function LoginPage() {
 
         <div className="login-page__demo">
           <p className="login-page__demo-text">
-            💡 <strong>Dica:</strong> Esta é uma versão demo. Use qualquer e-mail e senha para acessar.
+            💡 <strong>Firebase Authentication:</strong> Crie uma conta real ou faça login com suas credenciais.
           </p>
         </div>
       </div>

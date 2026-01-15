@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Task, TaskStatus } from '../../domain/entities/Task';
-import { LocalStorageTaskRepository } from '../../infrastructure/repositories/LocalStorageTaskRepository';
+import { FirestoreTaskRepository } from '../../infrastructure/repositories/FirestoreTaskRepository';
 import { GetTasksUseCase } from '../../application/useCases/GetTasksUseCase';
 import { UpdateTaskUseCase } from '../../application/useCases/UpdateTaskUseCase';
 import { DeleteTaskUseCase } from '../../application/useCases/DeleteTaskUseCase';
 import { TaskCard } from './TaskCard';
 import './KanbanBoard.css';
 
-const repository = new LocalStorageTaskRepository();
+const repository = new FirestoreTaskRepository();
 const getTasksUseCase = new GetTasksUseCase(repository);
 const updateTaskUseCase = new UpdateTaskUseCase(repository);
 const deleteTaskUseCase = new DeleteTaskUseCase(repository);

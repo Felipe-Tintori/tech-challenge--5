@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { LocalStorageUserProfileRepository } from '../../infrastructure/repositories/LocalStorageUserProfileRepository';
+import { FirestoreUserProfileRepository } from '../../infrastructure/repositories/FirestoreUserProfileRepository';
 import { GetUserProfileUseCase } from '../../application/useCases/GetUserProfileUseCase';
 import { UpdateUserProfileUseCase } from '../../application/useCases/UpdateUserProfileUseCase';
 import './ProfileForm.css';
 
-const repository = new LocalStorageUserProfileRepository();
+const repository = new FirestoreUserProfileRepository();
 const getProfileUseCase = new GetUserProfileUseCase(repository);
 const updateProfileUseCase = new UpdateUserProfileUseCase(repository);
 
