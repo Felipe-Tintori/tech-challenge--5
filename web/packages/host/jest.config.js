@@ -6,7 +6,7 @@ module.exports = {
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
       tsconfig: {
-        jsx: 'react',
+        jsx: 'react-jsx',
         esModuleInterop: true,
         allowSyntheticDefaultImports: true,
       },
@@ -14,6 +14,10 @@ module.exports = {
   },
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+    '^firebase/app$': '<rootDir>/src/__mocks__/firebaseMock.ts',
+    '^firebase/auth$': '<rootDir>/src/__mocks__/firebaseMock.ts',
+    '^firebase/firestore$': '<rootDir>/src/__mocks__/firebaseMock.ts',
+    '.*config/firebase$': '<rootDir>/src/__mocks__/firebaseMock.ts',
   },
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   collectCoverageFrom: [

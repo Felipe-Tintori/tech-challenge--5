@@ -6,16 +6,7 @@ module.exports = {
     '<rootDir>/packages/perfil-usuario',
   ],
   testEnvironment: 'jsdom',
-  collectCoverage: false,
-  collectCoverageFrom: [
-    'packages/**/src/**/*.{ts,tsx}',
-    '!packages/**/src/**/*.d.ts',
-    '!packages/**/src/**/*.test.{ts,tsx}',
-    '!packages/**/src/setupTests.ts',
-    '!packages/**/src/index.tsx',
-    '!packages/**/src/bootstrap.tsx',
-    '!packages/**/src/**/__tests__/**',
-  ],
+  collectCoverage: true,
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html'],
   coverageThreshold: {
