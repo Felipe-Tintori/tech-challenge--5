@@ -3,12 +3,12 @@ import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCVCz0ozmSkFIlesqxXV6C726ESPMiq7e8",
-  authDomain: "techchallenger5.firebaseapp.com",
-  projectId: "techchallenger5",
-  storageBucket: "techchallenger5.firebasestorage.app",
-  messagingSenderId: "625638043387",
-  appId: "1:625638043387:web:00cfafc2c46c2e5efe4fb1"
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
 };
 
 let app: FirebaseApp | null = null;

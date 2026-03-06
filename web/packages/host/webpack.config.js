@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { ModuleFederationPlugin } = require('webpack').container;
+const Dotenv = require('dotenv-webpack');
 const path = require('path');
 
 module.exports = (env, argv) => {
@@ -51,6 +52,11 @@ module.exports = (env, argv) => {
       ],
     },
     plugins: [
+      new Dotenv({
+        path: './.env',
+        safe: true,
+        systemvars: true,
+      }),
       new ModuleFederationPlugin({
         name: 'host',
         remotes: {
