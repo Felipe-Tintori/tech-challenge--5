@@ -1,8 +1,12 @@
-import { initializeApp, getApps, getApp } from 'firebase/app';
-import { initializeAuth, getReactNativePersistence, getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Constants from 'expo-constants';
+import { initializeApp, getApps, getApp } from "firebase/app";
+import {
+  initializeAuth,
+  getAuth,
+  browserLocalPersistence,
+} from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import Constants from "expo-constants";
+import { Platform } from "react-native";
 
 const {
   firebaseApiKey,
@@ -25,8 +29,22 @@ const firebaseConfig = {
 const isNew = getApps().length === 0;
 export const firebaseApp = isNew ? initializeApp(firebaseConfig) : getApp();
 
-export const auth = isNew
-  ? initializeAuth(firebaseApp, { persistence: getReactNativePersistence(AsyncStorage) })
-  : getAuth(firebaseApp);
+if (isNew) {
+  if (Platform.OS === "web") {
+    // Web: use browser localStorage persistence
+    initializeAuth(firebaseApp, { persistence: browserLocalPersistence });
+  } else {
+    // Native: use AsyncStorage persistence
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const AsyncStorage =
+      require("@react-native-async-storage/async-storage").default;
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { getReactNativePersistence } = require("firebase/auth");
+    initializeAuth(firebaseApp, {
+      persistence: getReactNativePersistence(AsyncStorage),
+    });
+  }
+}
 
+export const auth = getAuth(firebaseApp);
 export const db = getFirestore(firebaseApp);
